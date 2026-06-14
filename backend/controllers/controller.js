@@ -1,6 +1,9 @@
-import { hashPassword } from "../utils/passwordUtils.js"
+import { comparePasswords, hashPassword } from "../utils/passwordUtils.js"
 import * as queries from "../database/queries.js"
 import {body, validationResult, matchedData} from "express-validator"
+import jwt from "jsonwebtoken"
+import { configDotenv } from "dotenv"
+configDotenv()
 
 const validateSignUp = [
     body('firstName')
@@ -59,7 +62,7 @@ export const signUp = [
         catch(error){
             if(error.code === '23505'){
                 return res.status(409).json({
-                    errrors:[{msg: "Phone number already in use", path:"phoneNumber"}]
+                    errors:[{msg: "Phone number already in use", path:"phoneNumber"}]
                 })
             }
             console.error(error)
@@ -69,3 +72,39 @@ export const signUp = [
         }
     }
 ]
+
+export const logIn = async(req,res)=>{
+    try{
+        const phoneNumber = req.body.phoneNumber
+        const password = req.body.password
+        const userArray = await queries.getUserFromNumber(phoneNumber)
+        if (userArray.length <1){
+            return res.status(400).json({
+                errors: [{msg:"Incorrect phone number or password", path:"Login"}]
+            })
+        }
+        const match = await comparePasswords(password,userArray[0].password)
+        if(!match){
+            return res.status(400).json({
+                errors: [{msg:"Incorrect phone number or password", path:"Login"}]
+            })
+        }
+        const user = userArray[0]
+        jwt.sign({id:user.id,phoneNumber:user.phone_number},process.env.JWT_SECERET_KEY,{expiresIn:"1d"},function (error,token){
+            if(error){
+                console.error(error)
+                return res.status(t00).json({
+                    errors: [{msg:"Error creating token", path:"Internal Server Error"}]
+                })
+            }
+            res.json({token})
+        })
+       
+    } catch(error){
+        console.error(error)
+        return res.status(500).json({
+            errors: [{msg:"Error Logging in", path:"Internal Server Error"}]
+        })
+    }
+}
+
