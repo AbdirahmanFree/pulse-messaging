@@ -5,5 +5,6 @@ const router = Router()
 
 router.post("/api/sign-up",controller.signUp)
 router.post("/api/log-in",controller.logIn)
+router.get("/api/user",authenticateUser,controller.getUser)
 
 export default router
