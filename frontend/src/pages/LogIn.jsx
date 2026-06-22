@@ -1,14 +1,19 @@
 import { LoginForm } from "@/components/login-form";
 import axiosInstance from "@/utils/axiosInstance";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { AlertError } from "@/components/AlertError";
 import { useNavigate } from "react-router";
+import { UserContext } from "@/context/UserContext";
+import { UseUserAuth } from "@/hooks/UseUserAuth";
+
 
 function LogIn(){
+    const {updateUser,updateLoading} = useContext(UserContext)
     const [phoneNumber, setPhoneNumber] = useState("")
     const [password, setPassword] = useState("")
     const [errors, setErrors] = useState([])
     const navigate = useNavigate()
+    UseUserAuth()
     
     const handleLogin = async(e)=>{
         e.preventDefault()
@@ -20,6 +25,9 @@ function LogIn(){
             })
             const token= logInResponse.data.token
             localStorage.setItem("token",token)
+            const userResponse = await axiosInstance.get("/api/user")
+            updateUser(userResponse.data.user)
+            updateLoading(true)
             navigate("/")
        } 
        catch(error){

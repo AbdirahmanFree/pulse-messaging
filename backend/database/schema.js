@@ -15,7 +15,10 @@ const createUserTable = async () => {
 const createChatTable = async () => {
     await sql`CREATE TABLE IF NOT EXISTS chats (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        created_at TIMESTAMPTZ DEFAULT NOW()
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW(),
+        is_group BOOLEAN NOT NULL DEFAULT FALSE
+
     )`
 }
 
@@ -23,12 +26,22 @@ const createMessageTable = async () => {
     await sql`CREATE TABLE IF NOT EXISTS messages (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         chat_id UUID NOT NULL REFERENCES chats(id) ON DELETE CASCADE,
-        user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        type_of TEXT NOT NULL DEFAULT 'text',
-        CHECK (type_of IN ('text','image','video','audio','file')),
+        sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        type TEXT NOT NULL DEFAULT 'text',
+        CHECK (type IN ('text','image','video','audio','file')),
         content TEXT,
         file_url TEXT,    
         sent_at TIMESTAMPTZ DEFAULT NOW() 
+    )`
+}
+
+const createmessageReadsTable = async () =>{
+    await sql`CREATE TABLE IF NOT EXISTS message_reads (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        message_id UUID NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+        user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        read_at TIMESTAMPTZ DEFAULT NOW(),
+        UNIQUE(message_id,user_id)
     )`
 }
 
@@ -42,10 +55,25 @@ const createChatParticipant = async () => {
     )`
 }
 
+const createTableIndexes = async () => {
+    await sql`CREATE INDEX IF NOT EXISTS idx_messages_chat_id
+            ON messages(chat_id) `
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_message_reads_message_id
+            ON message_reads(message_id)`
+
+    await sql`CREATE INDEX IF NOT EXISTS idx_chat_participants_user_id
+            ON chat_participants(user_id)`
+}
+
 export async function initDb(){
     await createUserTable()
     await createChatTable()
     await createMessageTable()
     await createChatParticipant()
+    await createmessageReadsTable()
+    await createTableIndexes()
     console.log("initialized databases")
 }
+
+initDb()

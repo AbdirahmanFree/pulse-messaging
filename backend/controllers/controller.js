@@ -108,3 +108,33 @@ export const logIn = async(req,res)=>{
     }
 }
 
+export const getUser = async(req,res)=>{
+    try{
+        const user = {
+                id: req.userId,
+                phoneNumber: req.phoneNumber
+        }
+        return res.json({user})
+    }
+    catch(error){
+        console.error(error)
+        return res.status(500).json({
+            errors: [{msg:"Error Authenticating user", path:"Internal Server Error"}]
+        })
+    }
+    
+}
+
+export const getPhoneNumbers = async(req,res) => {
+    try{
+        const numbers = await queries.getPhoneNumbers(req.params.number)
+        return res.json({users:numbers})
+    }
+    catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error fetching numbers", path:"Internal server Error"}]
+        })
+    }
+}
+
