@@ -31,6 +31,7 @@ export const UseUserAuth=()=>{
                 console.log("failed to fetch user data")
                 console.error(error)
                 clearUser()
+                localStorage.removeItem("token")
                 updateLoading(false)
 
             }

@@ -15,5 +15,7 @@ export const getPhoneNumber = async (id) => {
                      WHERE id = ${id}`
 }
 
-
-
+export const getPhoneNumbers = async(number)=>{
+    return await sql`SELECT phone_number, first_name, last_name, id FROM users
+                    WHERE phone_number LIKE ${`%${number}%`}`
+}
