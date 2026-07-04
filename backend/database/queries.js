@@ -19,3 +19,34 @@ export const getPhoneNumbers = async(number)=>{
     return await sql`SELECT phone_number, first_name, last_name, id FROM users
                     WHERE phone_number LIKE ${`%${number}%`}`
 }
+
+export const getChats = async(user_id)=>{
+    return await sql`SELECT chats.id, chats.is_group, CONCAT(recepient.first_name, ' ', recepient.last_name) as name, recepient.id as recepient_id, chats.updated_at FROM chats
+                     JOIN chat_participants as cp_1 ON cp_1.chat_id = chats.id
+                     JOIN chat_participants as cp_2 ON cp_2.chat_id = chats.id AND cp_2.user_id != cp_1.user_id 
+                     JOIN users as recepient ON recepient.id = cp_2.user_id
+                     WHERE cp_1.user_id = ${user_id} AND NOT chats.is_group
+                     ORDER BY chats.updated_at DESC`
+}
+
+export const getGroupChats = async(user_id) => {
+    return await sql`SELECT chats.id, chats.is_group, chats.name, chats.updated_at FROM chats 
+                     JOIN chat_participants ON chat_participants.user_id = ${user_id} AND chat_participants.chat_id = chats.id
+                     WHERE chats.is_group
+                     ORDER BY chats.updated_at DESC `
+
+}
+
+export const getChat = async(user_id,chat_id) =>{
+    const chat = (await sql`SELECT * FROM chats
+                    WHERE chats.id = ${chat_id}`)[0]
+    if(chat.is_group){
+        return (await sql`SELECT chats.id, chats.is_group, chats.name, chats.updated_at FROM chats
+                        WHERE chats.id = ${chat_id}`)[0]
+    } else{
+        return (await sql`SELECT chats.id, chats.is_group, CONCAT(recepient.first_name, ' ', recepient.last_name) as name, recepient.id as recepient_id, chats.updated_at FROM chats
+                        JOIN chat_participants as cp1 ON cp1.chat_id = chats.id AND cp1.user_id = ${user_id}
+                        JOIN chat_participants as cp2 ON cp2.chat_id = chats.id AND cp1.id != cp2.id
+                        JOIN users as recepient ON recepient.id = cp2.user_id`)[0]
+    }
+}

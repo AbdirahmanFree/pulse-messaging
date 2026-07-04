@@ -2,6 +2,7 @@ import { comparePasswords, hashPassword } from "../utils/passwordUtils.js"
 import * as queries from "../database/queries.js"
 import {body, validationResult, matchedData} from "express-validator"
 import jwt from "jsonwebtoken"
+import { combineChats } from "../utils/helper.js"
 import { configDotenv } from "dotenv"
 configDotenv()
 
@@ -134,6 +135,33 @@ export const getPhoneNumbers = async(req,res) => {
         console.log(error)
         return res.status(500).json({
             errors: [{msg:"Error fetching numbers", path:"Internal server Error"}]
+        })
+    }
+}
+
+export const getChats = async(req,res) => {
+    try{
+        const directChats = await queries.getChats(req.userId)
+        const groupChats = await queries.getGroupChats(req.userId)
+        const chats = combineChats(directChats,groupChats)
+        return res.json({chats:chats})
+    } catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error fetching chats", path:"Internal server Error"}]
+        })
+    }
+}
+
+export const getChat = async(req,res) => {
+    try{
+        const chatId = req.params.chatId
+        const chat = await queries.getChat(req.userId,chatId)
+        return res.json({chat})
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error fetching chats", path:"Internal server Error"}]
         })
     }
 }
