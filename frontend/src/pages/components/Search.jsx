@@ -1,8 +1,10 @@
 import { Input } from "@/components/ui/input";
 import { CiSearch } from "react-icons/ci";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axiosInstance from "@/utils/axiosInstance";
-function Search(){
+import { UserContext } from "@/context/UserContext";
+function Search({...props}){
+    const {user} = useContext(UserContext)
     const [number, setNumber] = useState("")
     const [numbers, setNumbers] = useState([])
     useEffect(()=>{
@@ -17,9 +19,9 @@ function Search(){
     },[number])
 
     return(
-       <div className={`flex flex-col gap-2 mt-2 min-h-10 ${number ? 'max-h-25': 'max-h-10'} w-full rounded-b-lg borde-none px-3 overflow-y-scroll hide-scrollbar`}>
-            <div className={`sticky top-0 z-10 bg-white flex items-center ${number ? 'border-b-1' : ''} `}>
-                <CiSearch className="shrink-0" />
+       <div className={` flex flex-col gap-2 mt-2 min-h-10 ${number ? 'max-h-25 mb-8': 'max-h-10 mb-4'} w-full rounded-b-lg borde-none px-3`} {...props}>
+            <div className={`sticky top-0 z-10 h-15 max-h-15 bg-gray-100 flex items-center border-b-1 `}>
+                <CiSearch className=" mx-2 shrink-0" />
                 <Input
                     type="number"
                     placeholder="Search..."
@@ -29,14 +31,14 @@ function Search(){
                 />
             </div>
             {number  && (typeof numbers != "undefined") ? (
-                <div className="flex flex-col px-3 max-h-20 ">
-                    <ul className="flex flex-col px-5">
-                       {numbers.map(user=>{
+                <div className="flex flex-col px-3 overflow-x-hidden max-h-20 overflow-y-scroll hide-scrollbar">
+                    <ul className="flex flex-col gap-1">
+                       {numbers.map(searchUser=>{
                             return (
-                                <div id={user.id} className="flex flex-col hover:bg-gray-200 w-fit p-2 pr-16 rounded-2xl">
-                                    <span >{user.phone_number}</span>
-                                    <span className="opacity-60">{user.first_name} {user.last_name}</span>
-                                </div>
+                                user.id == searchUser.id ? (<></>) : (<li key={searchUser.id} className="flex flex-col hover:bg-gray-200 w-full p-2 pr-16 rounded-2xl cursor-pointer" onClick={()=>{props.setSelectedUser(user)}}>
+                                    <span className="truncate" >{searchUser.phone_number}</span>
+                                    <span className="truncate opacity-60">{searchUser.first_name} {searchUser.last_name}</span>
+                                </li>) 
                             )
                        })}
                     </ul>

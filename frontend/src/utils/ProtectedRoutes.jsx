@@ -3,6 +3,7 @@ import { UserContext } from "@/context/UserContext"
 import { useState, useContext } from "react"
 import { Spinner } from "@/components/ui/spinner"
 import { Outlet, Navigate } from "react-router"
+import { ChatProvider } from "@/context/ChatContext"
 
 function ProtectedRoutes(){
     UseUserAuth()
@@ -15,7 +16,13 @@ function ProtectedRoutes(){
     }
     else{
         console.log("here is the user:",user)
-        return user ? <Outlet/> : <Navigate to="/login"/>
+        return (
+            user ?
+             <ChatProvider>
+                <Outlet/>
+            </ChatProvider>
+              : <Navigate to="/login"/>
+            )
     }
     
 }

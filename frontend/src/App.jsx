@@ -3,7 +3,7 @@ import SignUp from "./pages/SignUp.jsx"
 import LogIn from "./pages/LogIn.jsx"
 import Home from "./pages/Home.jsx"
 import ProtectedRoutes from "./utils/ProtectedRoutes.jsx"
-import { UseUserAuth } from "./hooks/UseUserAuth.jsx"
+import Chat from "./pages/Chat.jsx"
 
 
 function App() {
@@ -14,7 +14,8 @@ function App() {
         <Route element={<SignUp/>} path="/signup"/>
         <Route element={<LogIn/>} path="/login"/>
         <Route element={<ProtectedRoutes/>}>
-          <Route element={<Home/>} path="/"/>
+            <Route element={<Home/>} path="/"/>
+            <Route element={<Chat/>} path="/chat/:chatId"/>
         </Route>
       </Routes>
     </BrowserRouter>

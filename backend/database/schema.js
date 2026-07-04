@@ -17,7 +17,13 @@ const createChatTable = async () => {
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         created_at TIMESTAMPTZ DEFAULT NOW(),
         updated_at TIMESTAMPTZ DEFAULT NOW(),
-        is_group BOOLEAN NOT NULL DEFAULT FALSE
+        is_group BOOLEAN NOT NULL DEFAULT FALSE,
+        name TEXT,
+        CONSTRAINT group_name_required
+        CHECK (
+                (NOT is_group) OR (name IS NOT NULL)
+            )
+
 
     )`
 }
@@ -30,7 +36,8 @@ const createMessageTable = async () => {
         type TEXT NOT NULL DEFAULT 'text',
         CHECK (type IN ('text','image','video','audio','file')),
         content TEXT,
-        file_url TEXT,    
+        file_url TEXT,   
+        CHECK(content IS NOT NULL OR file_url IS NOT NULL), 
         sent_at TIMESTAMPTZ DEFAULT NOW() 
     )`
 }
@@ -64,6 +71,9 @@ const createTableIndexes = async () => {
 
     await sql`CREATE INDEX IF NOT EXISTS idx_chat_participants_user_id
             ON chat_participants(user_id)`
+    
+    await sql`CREATE INDEX IF NOT EXISTS idx_chat_participants_chat_id
+            ON chat_participants(chat_id)`
 }
 
 export async function initDb(){
