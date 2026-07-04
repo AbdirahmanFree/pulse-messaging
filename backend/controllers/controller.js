@@ -37,7 +37,7 @@ const validateSignUp = [
 
 export const signUp = [
     validateSignUp,
-    async (req,res) =>{
+    async (req,res,next) =>{
         const errors = validationResult(req)
         if(!errors.isEmpty()){
             return res.status(400).json({
@@ -56,7 +56,7 @@ export const signUp = [
 
             }
             await queries.addUser(user)
-            return res.json(user)
+            next()
 
 
         }

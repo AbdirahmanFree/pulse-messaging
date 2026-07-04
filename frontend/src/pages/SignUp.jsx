@@ -1,9 +1,13 @@
 import { SignupForm } from "@/components/signup-form"
-import { useEffect, useState } from "react"
+import { useState, useContext } from "react"
 import axiosInstance from "@/utils/axiosInstance.js"
 import { validateName, validatePhoneNumber, validatePassword } from "@/utils/validation"
 import { AlertError } from "@/components/AlertError"
+import { useNavigate } from "react-router"
+import { UserContext } from "@/context/UserContext"
 function SignUp(){
+    const {updateUser,updateLoading} = useContext(UserContext)
+    const navigate = useNavigate()
     const [phoneNumber, setPhoneNumber] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -42,7 +46,12 @@ function SignUp(){
                 phoneNumber: phoneNumber,
                 password: password
             })
-            console.log(signUpResponse.data)
+            const token = signUpResponse.data.token
+            localStorage.setItem("token",token)
+            const userResponse = await axiosInstance.get("/api/user")
+            updateUser(userResponse.data.user)
+            updateLoading(true)
+            navigate("/")
         } catch(error){
             if(error.status === 409){
                 setErrors([{msg:"Phone number is in use", path:"Phone Number"}])
