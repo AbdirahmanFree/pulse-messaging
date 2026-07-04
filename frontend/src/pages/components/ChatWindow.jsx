@@ -21,7 +21,7 @@ function ChatWindow(){
         <div className="h-screen w-full flex flex-col justify-center items-center text-black bg-gray-50">
             {chat ? (
                 <div className={`flex flex-col h-screen w-full items-center justify-between `}>
-                    <div className=" flex bg-gray-100 h-15 w-full border-b-1 items-center px-4 justify-between text-black">
+                    <div className=" flex bg-gray-100 h-15 w-full border-b items-center px-4 justify-between text-black">
                         <span className="text-black text-xl">{chat.name}</span>
                         <div className="flex gap-4 items-center">
                             <MdOutlineVideocam className="text-2xl" />
@@ -30,7 +30,7 @@ function ChatWindow(){
                             
                         </div>
                     </div>
-                    <div className="mt-auto flex w-9/10 h-12 mb-8 items-center border-1 focus-within:border-ring focus-within::ring-3 focus-within:ring-ring/50 border-input bg-transparent px-2 py-4 rounded-2xl ">
+                    <div className="mt-auto flex w-9/10 h-12 mb-8 items-center border focus-within:border-ring focus-within::ring-3 focus-within:ring-ring/50 border-input bg-transparent px-2 py-4 rounded-2xl ">
                         <Input className="h-10 border-0 shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none" placeholder="Type a message" onChange={(e)=>{setMessage(e.target.value)}} />
                         <div className="flex gap-2">
                             {message.length>0 ? (

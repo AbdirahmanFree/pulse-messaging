@@ -20,7 +20,7 @@ function Search({...props}){
 
     return(
        <div className={` flex flex-col gap-2 mt-2 min-h-10 ${number ? 'max-h-25 mb-8': 'max-h-10 mb-4'} w-full rounded-b-lg borde-none px-3`} {...props}>
-            <div className={`sticky top-0 z-10 h-15 max-h-15 bg-gray-100 flex items-center border-b-1 `}>
+            <div className={`sticky top-0 z-10 h-15 max-h-15 bg-gray-100 flex items-center border-b `}>
                 <CiSearch className=" mx-2 shrink-0" />
                 <Input
                     type="number"

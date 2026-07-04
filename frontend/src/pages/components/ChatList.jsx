@@ -40,7 +40,7 @@ function ChatList(){
              
             } 
     return (
-        <div className="flex flex-col gap-2 w-1/3 h-screen border-r-1 bg-gray-100">
+        <div className="flex flex-col gap-2 w-1/3 h-screen border-r bg-gray-100">
             <Search className="bg-gray-100" />
             <div>
                 <ul className="flex flex-col gap-2 ">
