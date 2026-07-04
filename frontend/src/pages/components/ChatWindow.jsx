@@ -50,8 +50,8 @@ function ChatWindow(){
                 </div>
             ):(
                 <>             
-                    <LuMessageSquare className="size-20"/>
-                    <span>Select a chat to start messaging</span>
+                    <LuMessageSquare className="size-20 text-gray-500"/>
+                    <span className="text-gray-500">Select a chat to start messaging</span>
                 </>
             )}
             

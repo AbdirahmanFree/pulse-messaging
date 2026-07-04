@@ -9,5 +9,6 @@ router.get("/api/user",authenticateUser,controller.getUser)
 router.get("/api/user/:number",authenticateUser, controller.getPhoneNumbers)
 router.get("/api/chats",authenticateUser,controller.getChats)
 router.get("/api/chats/:chatId",authenticateUser,controller.getChat)
+router.delete("/api/user/delete",authenticateUser,controller.deleteUser)
 
 export default router
