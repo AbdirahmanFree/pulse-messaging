@@ -50,3 +50,8 @@ export const getChat = async(user_id,chat_id) =>{
                         JOIN users as recepient ON recepient.id = cp2.user_id`)[0]
     }
 }
+
+export const getUserName = async(user_id)=>{
+    return (await sql`SELECT first_name, last_name FROM users
+                    WHERE users.id = ${user_id} `)[0]
+}

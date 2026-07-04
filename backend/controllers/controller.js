@@ -111,10 +111,14 @@ export const logIn = async(req,res)=>{
 
 export const getUser = async(req,res)=>{
     try{
+        const name = await queries.getUserName(req.userId)
         const user = {
                 id: req.userId,
-                phoneNumber: req.phoneNumber
+                phoneNumber: req.phoneNumber,
+                firstName: name.first_name,
+                lastName: name.last_name
         }
+        
         return res.json({user})
     }
     catch(error){
