@@ -18,6 +18,11 @@ function Search({...props}){
         getPhoneNumbers()
     },[number])
 
+    const messageUser = async(id) => {
+        const chatResponse = await axiosInstance.get(`/api/chats/user/${id}`)
+        console.log(chatResponse)
+    }
+
     return(
        <div className={` flex flex-col gap-2 mt-2 min-h-10 ${number ? 'max-h-25 mb-8': 'max-h-10 mb-4'} w-full rounded-b-lg borde-none px-3`} {...props}>
             <div className={`sticky top-0 z-10 h-15 max-h-15 bg-gray-100 flex items-center border-b `}>
@@ -35,7 +40,8 @@ function Search({...props}){
                     <ul className="flex flex-col gap-1">
                        {numbers.map(searchUser=>{
                             return (
-                                user.id == searchUser.id ? (<></>) : (<li key={searchUser.id} className="flex flex-col hover:bg-gray-200 w-full p-2 pr-16 rounded-2xl cursor-pointer" onClick={()=>{props.setSelectedUser(user)}}>
+                                user.id == searchUser.id ? (<></>) : (
+                                <li key={searchUser.id} className="flex flex-col hover:bg-gray-200 w-full p-2 pr-16 rounded-2xl cursor-pointer" onClick={()=>{messageUser(searchUser.id)}}>
                                     <span className="truncate" >{searchUser.phone_number}</span>
                                     <span className="truncate opacity-60">{searchUser.first_name} {searchUser.last_name}</span>
                                 </li>) 

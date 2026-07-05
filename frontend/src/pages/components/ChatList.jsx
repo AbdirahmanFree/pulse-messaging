@@ -32,11 +32,6 @@ function ChatList(){
                     updateChat(chatsResponse.data.chat)
                     navigate(`/chat/${id}`)
                 }
-                else{
-                    //set chat global state to that number in chat window show messaging page sow that user can message 
-                    //on message send create the chat
-                    
-                }
                 } catch(error){
                     console.error(error)
                 }
@@ -50,7 +45,7 @@ function ChatList(){
             ): (
                 <></>
             )}
-            <Search className="bg-gray-100" />
+            <Search className="bg-gray-100" openChat={openChat} />
             <div>
                 <ul className="flex flex-col gap-2 ">
                     {chats.map((convo)=>{
