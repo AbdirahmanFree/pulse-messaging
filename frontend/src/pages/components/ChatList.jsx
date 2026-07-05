@@ -4,11 +4,12 @@ import axiosInstance from "@/utils/axiosInstance";
 import { ChatContext } from "@/context/ChatContext";
 import { useNavigate } from "react-router";
 import { UserContext } from "@/context/UserContext";
+import Profile from "./Profile";
 
 
 function ChatList(){
     const {user} = useContext(UserContext)
-    const {chat, updateChat, clearChat} = useContext(ChatContext)
+    const {chat, updateChat} = useContext(ChatContext)
     const [chats, setChats] = useState([])
     const navigate = useNavigate()
     useEffect(()=>{
@@ -44,9 +45,8 @@ function ChatList(){
     return (
         <div className="flex flex-col gap w-1/3 h-screen border-r bg-gray-100">
             {user ? (
-                <div className="h-10 w-10 bg-blue-700 rounded-full ml-2 mt-2 flex justify-center items-center p-4">
-                <span className="text-white">{user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}</span>
-            </div>
+                <Profile/>
+                
             ): (
                 <></>
             )}

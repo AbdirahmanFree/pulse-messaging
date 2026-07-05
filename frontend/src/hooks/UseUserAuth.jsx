@@ -5,7 +5,6 @@ import axiosInstance from "@/utils/axiosInstance";
 
 export const UseUserAuth=()=>{
     const {user,updateUser,loading,updateLoading,clearUser} = useContext(UserContext)
-    console.log("useUser auth")
     useEffect(()=>{
         if(user){
             updateLoading(false)

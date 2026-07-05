@@ -55,3 +55,8 @@ export const getUserName = async(user_id)=>{
     return (await sql`SELECT first_name, last_name FROM users
                     WHERE users.id = ${user_id} `)[0]
 }
+
+export const deleteUser =async(user_id)=> {
+    await sql`DELETE FROM users
+                WHERE users.id =${user_id}`
+}

@@ -170,3 +170,15 @@ export const getChat = async(req,res) => {
     }
 }
 
+export const deleteUser = async(req,res) =>{
+    try{
+        await queries.deleteUser(req.userId)
+        return res.json({msg:"successfully deleted user"})
+    } catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error fetching chats", path:"Internal server Error"}]
+        })
+    }
+}
+
