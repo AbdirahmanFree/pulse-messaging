@@ -182,3 +182,15 @@ export const deleteUser = async(req,res) =>{
     }
 }
 
+export const getDirectChat = async(req,res) =>{
+    try{
+        const chat = await queries.getDirectChat(req.userId,req.params.user2Id)
+        return res.json({chat})
+    } catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error fetching chats", path:"Internal server Error"}]
+        })
+    }
+}
+

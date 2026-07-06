@@ -60,3 +60,10 @@ export const deleteUser =async(user_id)=> {
     await sql`DELETE FROM users
                 WHERE users.id =${user_id}`
 }
+
+export const getDirectChat= async(user1_id,user2_id) =>{
+    return await sql`SELECT * FROM chats
+            JOIN chat_participants as cp1 ON cp1.chat_id = chats.id AND cp1.user_id = ${user1_id}
+            JOIN chat_participants as cp2 ON cp2.chat_id = chats.id AND cp2.user_id = ${user2_id} AND cp1.id != cp2.id
+            WHERE NOT chats.is_group`
+}
