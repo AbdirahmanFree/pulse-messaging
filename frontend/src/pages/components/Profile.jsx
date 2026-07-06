@@ -30,9 +30,9 @@ export default function Profile() {
 
     }
   return (
-    <Dialog className="px-4">
+    <Dialog className="px-2 mt-1">
          <DialogTrigger asChild>
-                <Button variant="outline" className="w-10 h-10 rounded-full bg-blue-700 text-white m-1">{user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}</Button>
+                <Button variant="outline" className="w-8 h-8 rounded-full bg-blue-700 text-white mx-1">{user.firstName.charAt(0).toUpperCase()}{user.lastName.charAt(0).toUpperCase()}</Button>
             </DialogTrigger>
        {deleting ? (
             <DialogContent className="text-red-700">
