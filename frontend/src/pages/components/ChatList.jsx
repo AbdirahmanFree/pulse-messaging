@@ -15,8 +15,6 @@ function ChatList(){
     useEffect(()=>{
         async function fetchChats(){
             const chatsResponse = await axiosInstance.get("/api/chats")
-            console.log(chatsResponse.data.chats)
-            console.log("hello")
             setChats(chatsResponse.data.chats)
         }
         fetchChats()
@@ -24,9 +22,11 @@ function ChatList(){
     },[])
 
         const openChat = async (id) => {
+            console.log(id)
+            
             try{
+               
                 const chatsResponse = await axiosInstance.get(`/api/chats/${id}`)
-                console.log("chat that was clicked",chatsResponse.data.chat)
                 if(chatsResponse.data.chat){
                     //navigate to /chats/:chatid
                     updateChat(chatsResponse.data.chat)
@@ -35,7 +35,7 @@ function ChatList(){
                 } catch(error){
                     console.error(error)
                 }
-             
+
             } 
     return (
         <div className="flex flex-col gap w-1/3 h-screen border-r bg-gray-100">
