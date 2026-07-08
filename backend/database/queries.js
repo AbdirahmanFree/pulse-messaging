@@ -45,9 +45,10 @@ export const getChat = async(user_id,chat_id) =>{
                         WHERE chats.id = ${chat_id}`)[0]
     } else{
         return (await sql`SELECT chats.id, chats.is_group, CONCAT(recepient.first_name, ' ', recepient.last_name) as name, recepient.id as recepient_id, chats.updated_at FROM chats
-                        JOIN chat_participants as cp1 ON cp1.chat_id = chats.id AND cp1.user_id = ${user_id}
-                        JOIN chat_participants as cp2 ON cp2.chat_id = chats.id AND cp1.id != cp2.id
-                        JOIN users as recepient ON recepient.id = cp2.user_id`)[0]
+                        JOIN chat_participants as cp1 ON cp1.chat_id = ${chat_id} AND cp1.user_id = ${user_id}
+                        JOIN chat_participants as cp2 ON cp2.chat_id = ${chat_id} AND cp1.id != cp2.id
+                        JOIN users as recepient ON recepient.id = cp2.user_id
+                        WHERE chats.id = ${chat_id}`)[0]
     }
 }
 
@@ -62,8 +63,32 @@ export const deleteUser =async(user_id)=> {
 }
 
 export const getDirectChat= async(user1_id,user2_id) =>{
-    return await sql`SELECT * FROM chats
+    return (await sql`SELECT * FROM chats
             JOIN chat_participants as cp1 ON cp1.chat_id = chats.id AND cp1.user_id = ${user1_id}
             JOIN chat_participants as cp2 ON cp2.chat_id = chats.id AND cp2.user_id = ${user2_id} AND cp1.id != cp2.id
-            WHERE NOT chats.is_group`
+            WHERE NOT chats.is_group`)[0]
 }
+
+export const addChat = async(user_id,recepient_id) =>{
+   const [chat] = await sql`INSERT INTO chats(is_group)
+                            VALUES(FALSE)
+                            RETURNING*`
+    await sql`INSERT INTO chat_participants(chat_id,user_id)
+                            VALUES(${chat.id},${user_id})`
+    await sql`INSERT INTO chat_participants(chat_id,user_id)
+                            VALUES(${chat.id},${recepient_id})`
+    
+    return chat
+   
+}
+
+export const addMessage = async(user_id,chat_id,message,type) =>{
+    if(type==="text"){
+        await sql`INSERT INTO messages(sender_id,chat_id,content)
+                                VALUES(${user_id},${chat_id},${message})`
+    }
+}
+
+
+
+

@@ -7,11 +7,16 @@ export function ChatProvider({children}){
     const [messageUser,setMessageUser] = useState(null)
 
     function updateChat(newChat){
+        clearChat()
         setChat(newChat)
     }
 
     function updateMessageUser(user){
         setMessageUser(user)
+    }
+
+    function clearChat(){
+        setChat(null)
     }
 
     return (
@@ -20,7 +25,8 @@ export function ChatProvider({children}){
             chat,
             updateChat,
             messageUser,
-            updateMessageUser
+            updateMessageUser,
+            clearChat
    
         }}
         >

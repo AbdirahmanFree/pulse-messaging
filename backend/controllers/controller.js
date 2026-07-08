@@ -194,3 +194,17 @@ export const getDirectChat = async(req,res) =>{
     }
 }
 
+
+export const sendMessage = async(req,res) =>{
+    try{
+        const chat = await queries.addChat(req.userId,req.body.recepientId)
+        const message = req.body.message
+        await queries.addMessage(req.userId,chat.id,message,req.body.type)
+        res.status(200).json({chat})
+    } catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error fetching chats", path:"Internal server Error"}]
+        })
+    }
+}

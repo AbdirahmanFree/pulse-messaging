@@ -4,11 +4,13 @@ import { useState, useEffect, useContext } from "react";
 import axiosInstance from "@/utils/axiosInstance";
 import { UserContext } from "@/context/UserContext";
 import { ChatContext } from "@/context/ChatContext";
+import { useNavigate } from "react-router";
 function Search({...props}){
     const {user} = useContext(UserContext)
-    const {updateMessageUser} = useContext(ChatContext)
+    const {updateMessageUser, clearChat, updateChat} = useContext(ChatContext)
     const [number, setNumber] = useState("")
     const [numbers, setNumbers] = useState([])
+    const navigate = useNavigate()
 
 
 
@@ -16,7 +18,6 @@ function Search({...props}){
         async function getPhoneNumbers(){
             const userNumbersResponse = await axiosInstance.get(`/api/user/${number}`)
             const array = userNumbersResponse.data
-            console.log(array.users)
             setNumbers(array.users)
             
         }
@@ -24,11 +25,20 @@ function Search({...props}){
     },[number])
 
     const messageUser = async(user) => {
+        navigate("/")
         const chatResponse = await axiosInstance.get(`/api/chats/user/${user.id}`)
-        if(chatResponse.data.chat.length <=0){
+        console.log("get chat from user: ",chatResponse)
+        if(Object.keys(chatResponse.data).length === 0){
+            clearChat()
             updateMessageUser(user)
         }
-     console.log(user)
+        else{
+            const newChat = chatResponse.data.chat
+            clearChat()
+            
+            navigate(`/chat/${newChat.chat_id}`)
+            
+        }
     }
 
     return(

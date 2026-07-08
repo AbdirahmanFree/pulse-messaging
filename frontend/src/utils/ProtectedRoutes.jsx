@@ -7,7 +7,6 @@ import { ChatProvider } from "@/context/ChatContext"
 
 function ProtectedRoutes(){
     UseUserAuth()
-    console.log("protected rroutes")
     const {user,loading} = useContext(UserContext)
     if(loading){
         return(
@@ -15,7 +14,6 @@ function ProtectedRoutes(){
         )
     }
     else{
-        console.log("here is the user:",user)
         return (
             user ?
              <ChatProvider>
