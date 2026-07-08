@@ -29,19 +29,16 @@ function Search({...props}){
         const chatResponse = await axiosInstance.get(`/api/chats/user/${user.id}`)
         console.log("get chat from user: ",chatResponse)
         if(Object.keys(chatResponse.data).length === 0){
-
             clearChat()
             updateMessageUser(user)
         }
         else{
-            console.log()
             const newChat = chatResponse.data.chat
             clearChat()
             
             navigate(`/chat/${newChat.chat_id}`)
             
         }
-     console.log(user)
     }
 
     return(

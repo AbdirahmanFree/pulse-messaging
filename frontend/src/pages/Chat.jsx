@@ -7,11 +7,10 @@ import { ChatContext} from "@/context/ChatContext"
 import axiosInstance from "@/utils/axiosInstance"
 function Chat(){
     const {chatId} = useParams()
-    const {updateChat,chat} = useContext(ChatContext)
+    const {updateChat} = useContext(ChatContext)
     useEffect(()=>{
         const fetchChat = async()=>{
             const chatResponse = await axiosInstance.get(`/api/chats/${chatId}`)
-            console.log("from chat: ",chatResponse)
             updateChat(chatResponse.data.chat)
         }
         
