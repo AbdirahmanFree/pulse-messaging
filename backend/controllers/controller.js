@@ -189,13 +189,13 @@ export const getDirectChat = async(req,res) =>{
     } catch(error){
         console.log(error)
         return res.status(500).json({
-            errors: [{msg:"Error fetching chats", path:"Internal server Error"}]
+            errors: [{msg:"Error fetching direct chat", path:"Internal server Error"}]
         })
     }
 }
 
 
-export const sendMessage = async(req,res) =>{
+export const sendInitialMessage = async(req,res) =>{
     try{
         const chat = await queries.addChat(req.userId,req.body.recepientId)
         const message = req.body.message
@@ -204,7 +204,36 @@ export const sendMessage = async(req,res) =>{
     } catch(error){
         console.log(error)
         return res.status(500).json({
-            errors: [{msg:"Error fetching chats", path:"Internal server Error"}]
+            errors: [{msg:"Error sendiing Iinital message", path:"Internal server Error"}]
+        })
+    }
+}
+
+export const sendMessage = async(req,res)=>{
+    try{
+        const object = req.body
+        object.senderId = req.userId
+        object.chatId=req.params.chatId
+        const message = await queries.sendMessage(object)
+        res.json({object})
+
+
+    } catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error Sending message", path:"Internal server Error"}]
+        })
+    }
+}
+
+export const getChatMessages = async(req,res) => {
+    try{
+        const messages = await queries.getChatMessages(req.params.chatId)
+        res.json({messages})
+    } catch(error){
+        console.log(error)
+        return res.status(500).json({
+            errors: [{msg:"Error fetching chat messages", path:"Internal server Error"}]
         })
     }
 }

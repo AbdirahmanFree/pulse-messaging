@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 function ChatWindow(){
     const [message, setMessage] = useState("")
     const {chat,messageUser, updateChat} = useContext(ChatContext)
+    const [messageType, setMessageType] = useState("text")
     const navigate = useNavigate()
     useEffect(()=>{
     },[messageUser])
@@ -36,7 +37,19 @@ function ChatWindow(){
             navigate(`/chat/${newChat.id}`)
            setMessage("")
         }
+        if(chat){
+           if(messageType ==="text"){
+                await axiosInstance.post(`/api/messages/${chat.id}`,{
+                    content: message,
+                    type: messageType
+                })
+                setMessage("")
+           }
+        
+        }
     }
+
+   
     
     return (
         <div className="h-screen w-full flex flex-col justify-center items-center text-black bg-gray-50">
@@ -50,14 +63,16 @@ function ChatWindow(){
                             <HiDotsVertical className="text-xl"/>
                         </div>
                     </div>
-                    <MessageDisplay/>
-                    <div className="mt-auto flex w-9/10 h-12 mb-8 items-center border focus-within:border-ring focus-within::ring-3 focus-within:ring-ring/50 border-input bg-transparent px-2 py-4 rounded-2xl ">
-                        <Input className="h-10 border-0 shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none" placeholder="Type a message" onChange={(e)=>{setMessage(e.target.value)}} />
+                    <MessageDisplay />
+                    <form className="mt-auto flex w-9/10 h-12 mb-8 items-center border focus-within:border-ring focus-within::ring-3 focus-within:ring-ring/50 border-input bg-transparent px-2 py-4 rounded-2xl " onSubmit={(e)=>handleSubmit(e)}>
+                        <Input className="h-10 border-0 shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none" placeholder="Type a message" value={message} onChange={(e)=>{setMessage(e.target.value)}} />
                         <div className="flex gap-2">
                             {message.length>0 ? (
-                                <div className="w-12 h-8 rounded-full bg-blue-700 flex items-center justify-center"> 
-                                    <RiSendPlaneLine className="h-4 w-4 text-white" />
-                                </div>
+                                <button type="submit"> 
+                                    <div className="w-12 h-8 rounded-full bg-blue-700 text-white hover:bg-white hover:text-blue-700 flex items-center justify-center">                
+                                            <RiSendPlaneLine className="h-4 w-4 "/>
+                                    </div>
+                                </button>
                             ): (
                                 <>
                                     <MdOutlineMic className="text-2xl" />
@@ -67,7 +82,7 @@ function ChatWindow(){
                            
                         </div>
                         
-                    </div>
+                    </form>
                 </div>
             ): ( messageUser ? (
                 <div className={`flex flex-col h-screen w-full items-center justify-between `}>
@@ -83,11 +98,11 @@ function ChatWindow(){
                         <Input className="h-10 border-0 shadow-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none" placeholder="Type a message" value={message} onChange={(e)=>{setMessage(e.target.value)}} />
                         <div className="flex gap-2">
                             {message.length>0 ? (
-                                <div className="w-12 h-8 rounded-full bg-blue-700 text-white hover:bg-white hover:text-blue-700 flex items-center justify-center"> 
-                                    <button type="submit">
-                                        <RiSendPlaneLine className="h-4 w-4 "/>
-                                    </button>
-                                </div>
+                                <button type="submit"> 
+                                    <div className="w-12 h-8 rounded-full bg-blue-700 text-white hover:bg-white hover:text-blue-700 flex items-center justify-center">                
+                                            <RiSendPlaneLine className="h-4 w-4 "/>
+                                    </div>
+                                </button>
                             ): (
                                 <>
                                    
