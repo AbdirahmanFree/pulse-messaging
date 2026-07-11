@@ -13,15 +13,11 @@ export function groupMessages(messages){
                 group.unshift(messages[i])
                 continue
             }
-            if(group[0].sender_id !== messages[i].sender_id){
-                groupedMessages.unshift(group)
-                group = [messages[i]]
-                continue
-            }
+            
             const t1 = new Date(group[group.length-1].sent_at).getTime()
             const t2 = new Date(messages[i].sent_at).getTime()
             const difference = Math.abs(t1-t2)
-            if(difference < 5*60 *1000){
+            if(difference < 15*60 *1000){
                 group.unshift(messages[i])
                 continue
             }
@@ -59,5 +55,3 @@ export function formatDate(date){
     }
 
 }
-
-console.log(formatDate("2026-07-09T00:48:54.196Z"))
