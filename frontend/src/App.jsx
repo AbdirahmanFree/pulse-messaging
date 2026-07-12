@@ -4,7 +4,6 @@ import LogIn from "./pages/LogIn.jsx"
 import Home from "./pages/Home.jsx"
 import ProtectedRoutes from "./utils/ProtectedRoutes.jsx"
 import Chat from "./pages/Chat.jsx"
-import { socket } from "./socket/socket.js"
 
 
 function App() {
