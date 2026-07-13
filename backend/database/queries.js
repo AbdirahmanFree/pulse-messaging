@@ -90,12 +90,13 @@ export const addMessage = async(user_id,chat_id,message,type) =>{
 
 export const sendMessage = async(object) =>{
     if(object.type === "text"){
-        await sql`INSERT INTO messages(chat_id,sender_id,type,content)
-                                VALUES(${object.chatId},${object.senderId},${object.type},${object.content})`
+        return (await sql`INSERT INTO messages(chat_id,sender_id,type,content)
+                                VALUES(${object.chat_id},${object.sender_id},${object.type},${object.content})
+                                RETURNING *`)[0]
     }
     else{
         await sql`INSERT INTO messages(chat_id,sender_id,type,file_url)
-                                VALUES(${object.chatId},${object.senderId},${object.type},${object.fileUrl})`
+                                VALUES(${object.chat_id},${object.senderId},${object.type},${object.fileUrl})`
     }
 
 }

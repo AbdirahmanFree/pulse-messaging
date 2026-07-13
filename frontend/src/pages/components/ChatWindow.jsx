@@ -11,15 +11,15 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import MessageDisplay from "./MessageDisplay";
 import axiosInstance from "@/utils/axiosInstance";
 import { useNavigate } from "react-router";
-import { Socket } from "socket.io-client";
-import { socket } from "@/socket/socket";
 import { UserContext } from "@/context/UserContext";
+import { SocketContext } from "@/context/SocketContext";
 
 
 function ChatWindow(){
     const [message, setMessage] = useState("")
     const {user} = useContext(UserContext)
     const {chat,messageUser, updateChat} = useContext(ChatContext)
+    const {socket} = useContext(SocketContext)
     const [messageType, setMessageType] = useState("text")
     const navigate = useNavigate()
     useEffect(()=>{
@@ -30,6 +30,7 @@ function ChatWindow(){
 
     const handleSubmit = async(e)=>{
         e.preventDefault()
+        if(message.length ===0) return;
         if(messageUser && !chat){
             const messageRes = await axiosInstance.post("/api/messages",{
                 recepientId: messageUser.id,
@@ -43,17 +44,12 @@ function ChatWindow(){
         }
         if(chat){
            if(messageType ==="text"){
-                /*await axiosInstance.post(`/api/messages/${chat.id}`,{
-                    content: message,
-                    type: messageType
-                }) */
-              
                socket.emit("message",{
-                content:message,
-                type:messageType,
-                chat_id:chat.id,
-                sender_id:user.id
-            })
+                    content:message,
+                    type:messageType,
+                    chat_id:chat.id,
+                    sender_id:user.id
+                })
                setMessage("")
            }
         
