@@ -14,7 +14,7 @@ export function groupMessages(messages){
                 continue
             }
             
-            const t1 = new Date(group[group.length-1].sent_at).getTime()
+            const t1 = new Date(group[0].sent_at).getTime()
             const t2 = new Date(messages[i].sent_at).getTime()
             const difference = Math.abs(t1-t2)
             if(difference < 15*60 *1000){
@@ -53,5 +53,24 @@ export function formatDate(date){
         const year = dateThen.getFullYear()
         return `${month.slice(0,3)}, ${day}, ${year}, ${dateThen.toLocaleTimeString([],{hour:'numeric', minute:'2-digit'})}`
     }
+
+}
+
+
+export function addToChat(messages,newMessage){
+    if (!messages.length) return;
+    const latestMessage = messages[0][0]
+    const dateThen = new Date(latestMessage.sent_at)
+    const dateNow = new Date(newMessage.sent_at)
+
+    const newGroups = messages.map(group => [...group]);
+
+    if(dateNow.getTime() - dateThen.getTime() <15 * 60 * 1000 ){
+        newGroups[0].unshift(newMessage);
+    }
+    else{
+         newGroups.unshift([newMessage]);
+    }
+    return newGroups
 
 }

@@ -1,13 +1,13 @@
 import { ChatContext } from "@/context/ChatContext"
 import { UserContext } from "@/context/UserContext"
+import { SocketContext } from "@/context/SocketContext"
 import axiosInstance from "@/utils/axiosInstance"
-import { groupMessages } from "@/utils/helper"
+import { groupMessages, addToChat,formatDate } from "@/utils/helper"
 import { useContext, useEffect, useState } from "react"
 import { Message, MessageContent } from "@/components/ui/message"
 import { Bubble, BubbleContent } from "@/components/ui/bubble"
-import { formatDate } from "@/utils/helper"
-import { socket } from "@/socket/socket"
 import { useParams } from "react-router"
+
 
 
 function MessageDisplay(){
@@ -15,16 +15,26 @@ function MessageDisplay(){
     const {chat} = useContext(ChatContext)
     const {user} = useContext(UserContext)
     const [messages, setMessages] = useState([])
-    const [newMessage,setNewMessage]= [{}]
+    const { newMessage, socket } = useContext(SocketContext);
 
     useEffect(()=>{
-        socket.on("message_sent",(msg)=>{
-            console.log("message recieved",msg)
+        
+        if (!newMessage) return;
+        
+            
+        setMessages(prevMessages =>{
+            if(!prevMessages || prevMessages.length === 0){
+                return [[newMessage]]
+            }
+            return addToChat(prevMessages,newMessage)
         })
-        return () => {
-            socket.off("message_sent");
-        };
-    },[])
+     
+        
+
+        
+
+    },[newMessage])
+
     useEffect(()=>{
       const fetchMessages = async() => {
             const messagesArray = await axiosInstance.get(`/api/messages/${chat.id}`)
@@ -34,6 +44,10 @@ function MessageDisplay(){
             setMessages(groupedMessages)
         }
         fetchMessages()
+        socket.emit("join_chat",chatId)
+        return ()=>{
+            socket.off("join_chat")
+        }
         
     },[chatId])
 
